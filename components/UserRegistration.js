@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {SocialIcon} from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const UserRegistration = ()=>{
@@ -18,8 +19,19 @@ const UserRegistration = ()=>{
     const [confirmPasswordError,setConfirmPasswordError] = useState('');
 
 
+    const handleSubmit = async ()=>{
+        const data = {name:name,email:email,password:password}
+        try {
+            await AsyncStorage.setItem("data", JSON.stringify(data));
+            navigation.navigate('CompleteSetup');
 
-    const validate = () =>{
+          } catch (error) {
+            console.log(error);
+          }
+    }
+
+
+    const validate = (handleSubmit) =>{
 
         if(!email.includes("@")){
             setEmailError('Invalid Email');
@@ -58,11 +70,9 @@ const UserRegistration = ()=>{
             setConfirmPasswordError('')
             setNameError('')
         }
-      
+        handleSubmit()
+
     }
-
-
-
     const navigation =useNavigation();
     const [fontsloaded]=useFonts({
         'Montaga': require('../assets/fonts/Montaga-Regular.ttf'),

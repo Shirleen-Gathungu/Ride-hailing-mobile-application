@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/react-native-link": "^4.0.0",
+    "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@rneui/themed": "^4.0.0-rc.7",

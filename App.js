@@ -8,6 +8,7 @@ import OnboardingScreen from './components/OnboardingScreen';
 import SignUp from './components/SignUp';
 import UserRegistration from './components/UserRegistration';
 import UserLogin from './components/UserLogin';
+import CompleteSetup from './components/CompleteSetup';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -20,6 +21,8 @@ export default function App() {
       <Stack.Screen name='SignUp' component = {SignUp}/>
       <Stack.Screen name='UserRegistration' component = {UserRegistration}/>
       <Stack.Screen name='UserLogin' component = {UserLogin}/>
+      <Stack.Screen name='CompleteSetup' component = {CompleteSetup}/>
+
 
 
 
