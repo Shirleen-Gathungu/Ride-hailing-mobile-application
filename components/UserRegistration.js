@@ -3,6 +3,7 @@ import { StyleSheet,View,TextInput,Image,TouchableOpacity,Text} from "react-nati
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {SocialIcon} from '@rneui/themed';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -12,6 +13,16 @@ const UserRegistration = ()=>{
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [confirmPassword,setConfirmPassword] = useState('');
+    const [hidePassword,setHidePassword] = useState(false);
+
+    const [isNameFocused, setIsNameFocused] = useState(false);
+    const [isEmailFocused, setIsEmailFocused] = useState(false);
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+    const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
+
+  
+
+
     
     const [nameError,setNameError] = useState('');
     const [emailError,setEmailError] = useState('');
@@ -31,7 +42,7 @@ const UserRegistration = ()=>{
     }
 
 
-    const validate = (handleSubmit) =>{
+    const validate = () =>{
 
         if(!email.includes("@")){
             setEmailError('Invalid Email');
@@ -70,7 +81,6 @@ const UserRegistration = ()=>{
             setConfirmPasswordError('')
             setNameError('')
         }
-        handleSubmit()
 
     }
     const navigation =useNavigation();
@@ -81,47 +91,105 @@ const UserRegistration = ()=>{
             return <AppLoading/>
         };
 
+
+        const togglePasswordVisibility = () => {
+            setHidePassword(!hidePassword);
+          };
+
+
+          const handleNameFocus = () => {
+            setIsNameFocused(true);
+          };
+        
+          const handleNameBlur = () => {
+            setIsNameFocused(false);
+          };
+        
+          const handleEmailFocus = () => {
+            setIsEmailFocused(true);
+          };
+        
+          const handleEmailBlur = () => {
+            setIsEmailFocused(false);
+          };
+        
+          const handlePasswordFocus = () => {
+            setIsPasswordFocused(true);
+          };
+        
+          const handlePasswordBlur = () => {
+            setIsPasswordFocused(false);
+          };
+          const handleConfirmPasswordFocus = () => {
+            setIsConfirmPasswordFocused(true);
+          };
+        
+          const handleConfirmPasswordBlur = () => {
+            setIsConfirmPasswordFocused(false);
+          };
+        
     return(
     <View style ={styles.input} >
         <Text style = {styles.text}> Create Account</Text>
         <Text style = {styles.lineStyle}></Text>
             <TextInput
-             style = {styles.textInput}  
+             style = {[styles.textInput,isNameFocused && styles.inputFocused] }  
              placeholder="Enter Full Name" 
              value={name}
-             onChangeText={text => setName(text)}
-
+             onChangeText={text =>
+                setName(text)
+            }
+            onFocus={handleNameFocus}
+            onBlur={handleNameBlur}
             >
-
              </TextInput>
              <Text style = {styles.error}>{nameError}</Text>
 
             <TextInput 
-            style = {styles.textInput} 
+            style = {[styles.textInput_a,isEmailFocused && styles.inputFocused] } 
             onChangeText={text => setEmail(text)}
+            onFocus={handleEmailFocus}
+            onBlur={handleEmailBlur}
             value={email}
             autoCapitalize='none'
-            placeholder="Enter Email" >
+            placeholder="Enter Email" 
+        
+            
+            >
             </TextInput>
             <Text style = {styles.error}>{emailError}</Text>
 
 
             <TextInput 
-            style = {styles.textInput} 
+            style = {[styles.textInput_c,isPasswordFocused && styles.inputFocused]}             
             placeholder="Enter password" 
-            secureTextEntry = {true}
+            secureTextEntry = {!hidePassword}
             onChangeText={text => setPassword(text)}
             value={password}
+            onFocus={handlePasswordFocus}
+            onBlur={handlePasswordBlur}
             >
             </TextInput>
+            <View style = {styles.icon}>
+            <Icon 
+            onPress={togglePasswordVisibility}
+            name={hidePassword ? 'eye' : 'eye-slash'}
+            size={15} 
+            color='grey'/>
+
+            </View>
+
+
+
             <Text style = {styles.error}>{passwordError}</Text>
        <TextInput 
-            style = {styles.textInput}  
+            style = {[styles.textInput_c,isConfirmPasswordFocused && styles.inputFocused]}  
             placeholder="Confirm password" 
             secureTextEntry = {true} 
             onChangeText={text => setConfirmPassword(text)}
+            onFocus={handleConfirmPasswordFocus}
+            onBlur={handleConfirmPasswordBlur}
             value={confirmPassword}
-
             >
 
              </TextInput>   
@@ -171,16 +239,42 @@ const styles = StyleSheet.create({
         },
 
         input:{
-        marginTop:42,
+        marginTop:32,
         marginVertical:135,    
         marginLeft:92,
+       
         },
-        
+
         textInput:{
-        marginVertical:32,
-        fontFamily:'Montaga'
+            marginVertical:25,
+            fontFamily:'Montaga',
+            paddingTop:15
+
+        
+            },
+        textInput_a:{
+        marginVertical:5,
+        fontFamily:'Montaga',
+        paddingTop:10
+
+       
 
         },
+        textInput_b:{
+            marginVertical:25,
+            fontFamily:'Montaga',
+
+            
+
+    
+            },
+            textInput_c:{
+                marginVertical:25,
+                fontFamily:'Montaga',
+                paddingTop:20
+        
+                },
+              
         image_one:{
             width:299,
             height:251,
@@ -225,6 +319,19 @@ const styles = StyleSheet.create({
             color:'red',
             fontFamily:'Montaga'
           },
+          icon:{
+            paddingLeft:155,
+            marginTop:-57 
+          },
+          inputFocused: {
+            borderBottomWidth: 1,
+            borderBottomColor: '#2596be',
+            width:205,
+            
+          },
+         
+
+
         
 })
 

@@ -3,6 +3,7 @@ import { StyleSheet,View,TextInput,Image,TouchableOpacity,Text} from "react-nati
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { useNavigation } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {SocialIcon} from '@rneui/themed';
 
 
@@ -13,6 +14,15 @@ const UserLogin = () =>{
 
     const [emailError,setEmailError] = useState('');
     const [passwordError,setPasswordError] = useState('');
+
+    const [hidePassword,setHidePassword] = useState(false);
+
+
+    const [isNameFocused, setIsNameFocused] = useState(false);
+    const [isEmailFocused, setIsEmailFocused] = useState(false);
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+    const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
+
 
     const validate = () =>{
         if(!email.includes("@")){
@@ -36,6 +46,26 @@ const UserLogin = () =>{
         }
     }
 
+
+    const togglePasswordVisibility = () => {
+        setHidePassword(!hidePassword);
+      };
+      const handleEmailFocus = () => {
+        setIsEmailFocused(true);
+      };
+    
+      const handleEmailBlur = () => {
+        setIsEmailFocused(false);
+      };
+    
+      const handlePasswordFocus = () => {
+        setIsPasswordFocused(true);
+      };
+    
+      const handlePasswordBlur = () => {
+        setIsPasswordFocused(false);
+      };
+
     const navigation =useNavigation();
     const [fontsloaded]=useFonts({
         'Montaga': require('../assets/fonts/Montaga-Regular.ttf'),
@@ -44,30 +74,46 @@ const UserLogin = () =>{
             return <AppLoading/>
         };
 
+
+
+
     return(
        <View style = {styles.input}>
          <Text style = {styles.text}>Sign in to Account</Text>
         <Text style = {styles.lineStyle}></Text>
         <TextInput 
-            style = {styles.textInput} 
-            autoCapitalize='none'
-            placeholder="Enter Email"
+            style = {[styles.textInput,isEmailFocused && styles.inputFocused] } 
             onChangeText={text => setEmail(text)}
+            onFocus={handleEmailFocus}
+            onBlur={handleEmailBlur}
             value={email}
+            autoCapitalize='none'
+            placeholder="Enter Email" 
+        
+            
             >
             </TextInput>
             <Text style = {styles.error}>{emailError}</Text>
 
-        <TextInput 
-        style = {styles.textInput}  
-        placeholder="Enter password" 
-        onChangeText={text => setPassword(text)}
-        value={password}   
-        secureTextEntry = {true} >
+        
+            <TextInput 
+            style = {[styles.textInput,isPasswordFocused && styles.inputFocused]}             
+            placeholder="Enter password" 
+            secureTextEntry = {!hidePassword}
+            onChangeText={text => setPassword(text)}
+            value={password}
+            onFocus={handlePasswordFocus}
+            onBlur={handlePasswordBlur}
+            >
+            </TextInput>
+            <View style = {styles.icon}>
+            <Icon 
+            onPress={togglePasswordVisibility}
+            name={hidePassword ? 'eye' : 'eye-slash'}
+            size={15} 
+            color='grey'/>
 
-        </TextInput>
-        <Text style = {styles.error}>{passwordError}</Text>
-
+            </View>
 
         <TouchableOpacity style = {styles.button} onPress={validate}>
              <Text style = {styles.buttonText}>Sign In </Text>
@@ -116,7 +162,8 @@ const styles = StyleSheet.create({
         marginLeft:-14
         },
         textInput:{
-        marginVertical:32,
+        marginVertical:22,
+        paddingTop:10,
         fontFamily:'Montaga'
         },
         buttonText:{
@@ -157,6 +204,16 @@ const styles = StyleSheet.create({
           error:{
             color:'red',
             fontFamily:'Montaga'
+          },
+          icon:{
+            paddingLeft:155,
+            marginTop:-45 
+          },
+          inputFocused: {
+            borderBottomWidth: 1,
+            borderBottomColor: '#2596be',
+            width:205,
+            
           },
 
 })
