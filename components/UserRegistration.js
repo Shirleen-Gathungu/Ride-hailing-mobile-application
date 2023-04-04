@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { StyleSheet,View,TextInput,Image,TouchableOpacity,Text} from "react-native";
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -6,8 +6,7 @@ import {SocialIcon} from '@rneui/themed';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import { GoogleAuthenticator } from 'expo-google-app-auth';
 const UserRegistration = ()=>{
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
@@ -20,25 +19,56 @@ const UserRegistration = ()=>{
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
 
-  
-
-
     
     const [nameError,setNameError] = useState('');
     const [emailError,setEmailError] = useState('');
     const [passwordError,setPasswordError] = useState('');
     const [confirmPasswordError,setConfirmPasswordError] = useState('');
+   
 
+    async function signInWithGoogleAsync() {
+      try {
+        const result = await GoogleAuthenticator.signInAsync({
+          // The Google OAuth client ID for your app
+          clientId: '395230206163-a46pjv1aep90jqh1ege2tgf5inl5fsed.apps.googleusercontent.com',
+          // The scopes to request from the user
+          scopes: ['profile', 'email'],
+        });
+    
+        if (result.type === 'success') {
+          // User successfully authenticated with Google
+          // TODO: Handle the authentication result
+        } else {
+          // User cancelled the authentication request
+          // TODO: Handle the cancellation
+        }
+      } catch (e) {
+        // An error occurred during the authentication process
+        // TODO: Handle the error
+      }
+    }
 
-    const handleSubmit = async ()=>{
-        const data = {name:name,email:email,password:password}
-        try {
-            await AsyncStorage.setItem("data", JSON.stringify(data));
-            navigation.navigate('CompleteSetup');
+    const storeData = async (key, value) => {
+      try {
+        await AsyncStorage.setItem(key, value);
+        console.log('Data stored successfully');
+      } catch (error) {
+        console.log('Error storing data:', error);
+      }
+    }
 
-          } catch (error) {
-            console.log(error);
-          }
+    const handleSubmit = () => {
+      // submit the form data to your server or perform any other necessary action
+      console.log(name, email, password, confirmPassword);
+    
+      // store the form data in local storage
+      storeData('name', name);
+      storeData('email', email);
+      storeData('password', password);
+      storeData('confirmPassword', confirmPassword);
+
+      navigation.navigate('CompleteSetup')
+
     }
 
 
@@ -136,8 +166,12 @@ const UserRegistration = ()=>{
              style = {[styles.textInput,isNameFocused && styles.inputFocused] }  
              placeholder="Enter Full Name" 
              value={name}
-             onChangeText={text =>
-                setName(text)
+             onChangeText={(text) =>{
+              setName(text);
+              storeData('name', text);
+
+             }
+             
             }
             onFocus={handleNameFocus}
             onBlur={handleNameBlur}
@@ -147,14 +181,17 @@ const UserRegistration = ()=>{
 
             <TextInput 
             style = {[styles.textInput_a,isEmailFocused && styles.inputFocused] } 
-            onChangeText={text => setEmail(text)}
+            onChangeText={(text) =>{
+              setEmail(text);
+              storeData('email', text);
+
+            }
+            }
             onFocus={handleEmailFocus}
             onBlur={handleEmailBlur}
             value={email}
             autoCapitalize='none'
             placeholder="Enter Email" 
-        
-            
             >
             </TextInput>
             <Text style = {styles.error}>{emailError}</Text>
@@ -164,7 +201,11 @@ const UserRegistration = ()=>{
             style = {[styles.textInput_c,isPasswordFocused && styles.inputFocused]}             
             placeholder="Enter password" 
             secureTextEntry = {!hidePassword}
-            onChangeText={text => setPassword(text)}
+            onChangeText={(text) => {
+              setPassword(text);
+              storeData('password', text);
+            }
+            }
             value={password}
             onFocus={handlePasswordFocus}
             onBlur={handlePasswordBlur}
@@ -179,14 +220,18 @@ const UserRegistration = ()=>{
 
             </View>
 
-
-
             <Text style = {styles.error}>{passwordError}</Text>
+
        <TextInput 
             style = {[styles.textInput_c,isConfirmPasswordFocused && styles.inputFocused]}  
             placeholder="Confirm password" 
             secureTextEntry = {true} 
-            onChangeText={text => setConfirmPassword(text)}
+            onChangeText={(text )=> {
+              setConfirmPassword(text)
+              storeData('confirmPassword', text);
+            }
+             
+            }
             onFocus={handleConfirmPasswordFocus}
             onBlur={handleConfirmPasswordBlur}
             value={confirmPassword}
@@ -194,16 +239,19 @@ const UserRegistration = ()=>{
 
              </TextInput>   
              <Text style = {styles.error}>{confirmPasswordError}</Text> 
+            <TouchableOpacity style = {styles.button} onPress={() => {
+              validate()
+              handleSubmit()
 
-
-            <TouchableOpacity style = {styles.button} onPress={validate}>
+            }}>
              <Text style = {styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
             <Text style = {styles.text_3}>Or</Text>
+           
             <SocialIcon
-            
-             style = {styles.socialIcon}
-                  //Social Icon using @rneui/themed
+           
+                  style = {styles.socialIcon}
+                  onPress={signInWithGoogleAsync}
                   type="google"
                   iconColor="white"
                   backgroundColor ='red'
@@ -211,6 +259,7 @@ const UserRegistration = ()=>{
                   //Type of Social Icon
                  
                 />
+          
                 <TouchableOpacity onPress={() => {
                 navigation.navigate('UserLogin')
                 

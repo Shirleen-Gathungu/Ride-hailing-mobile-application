@@ -3,7 +3,9 @@ import { StyleSheet,View,TextInput,Image,TouchableOpacity,Text} from "react-nati
 
 const CompleteSetup = ()=>{
     return(
-<View> Psst</View>
+<View> 
+    <Text>Pss</Text>
+</View>
     )
 }
 export default CompleteSetup;

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { StyleSheet,View,TextInput,Image,TouchableOpacity,Text} from "react-native";
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -77,6 +77,34 @@ const UserLogin = () =>{
 
 
 
+      
+    const getData = async (key) => {
+      try {
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+          return value;
+        }
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+      }
+    }
+
+
+   useEffect(() => {
+
+  getData('email').then((value) => {
+    if (value) {
+      setEmail(value);
+    }
+  });
+
+  getData('password').then((value) => {
+    if (value) {
+      setPassword(value);
+    }
+  });
+}, []);
+
     return(
        <View style = {styles.input}>
          <Text style = {styles.text}>Sign in to Account</Text>
@@ -115,7 +143,7 @@ const UserLogin = () =>{
 
             </View>
 
-        <TouchableOpacity style = {styles.button} onPress={validate}>
+        <TouchableOpacity style = {styles.button} onPress={(validate)}>
              <Text style = {styles.buttonText}>Sign In </Text>
             </TouchableOpacity>
             <Text style = {styles.text_3}>Or</Text>
