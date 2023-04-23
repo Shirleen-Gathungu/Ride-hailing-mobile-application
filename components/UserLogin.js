@@ -46,6 +46,15 @@ const UserLogin = () =>{
         }
     }
 
+    const handleSubmit = () => {
+      // submit the form data to your server or perform any other necessary action
+      console.log( email, password);
+    
+      // store the form data in local storage
+
+      navigation.navigate('Home')
+
+    }
 
     const togglePasswordVisibility = () => {
         setHidePassword(!hidePassword);
@@ -73,37 +82,6 @@ const UserLogin = () =>{
         if (!fontsloaded){
             return <AppLoading/>
         };
-
-
-
-
-      
-    const getData = async (key) => {
-      try {
-        const value = await AsyncStorage.getItem(key);
-        if (value !== null) {
-          return value;
-        }
-      } catch (error) {
-        console.log('Error retrieving data:', error);
-      }
-    }
-
-
-   useEffect(() => {
-
-  getData('email').then((value) => {
-    if (value) {
-      setEmail(value);
-    }
-  });
-
-  getData('password').then((value) => {
-    if (value) {
-      setPassword(value);
-    }
-  });
-}, []);
 
     return(
        <View style = {styles.input}>
@@ -143,7 +121,11 @@ const UserLogin = () =>{
 
             </View>
 
-        <TouchableOpacity style = {styles.button} onPress={(validate)}>
+        <TouchableOpacity style = {styles.button} onPress={() => {
+              validate()
+              handleSubmit()
+
+            }}>
              <Text style = {styles.buttonText}>Sign In </Text>
             </TouchableOpacity>
             <Text style = {styles.text_3}>Or</Text>

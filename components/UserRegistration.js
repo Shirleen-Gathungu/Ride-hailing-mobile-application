@@ -6,7 +6,7 @@ import {SocialIcon} from '@rneui/themed';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GoogleAuthenticator } from 'expo-google-app-auth';
+
 const UserRegistration = ()=>{
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
@@ -26,27 +26,7 @@ const UserRegistration = ()=>{
     const [confirmPasswordError,setConfirmPasswordError] = useState('');
    
 
-    async function signInWithGoogleAsync() {
-      try {
-        const result = await GoogleAuthenticator.signInAsync({
-          // The Google OAuth client ID for your app
-          clientId: '395230206163-a46pjv1aep90jqh1ege2tgf5inl5fsed.apps.googleusercontent.com',
-          // The scopes to request from the user
-          scopes: ['profile', 'email'],
-        });
-    
-        if (result.type === 'success') {
-          // User successfully authenticated with Google
-          // TODO: Handle the authentication result
-        } else {
-          // User cancelled the authentication request
-          // TODO: Handle the cancellation
-        }
-      } catch (e) {
-        // An error occurred during the authentication process
-        // TODO: Handle the error
-      }
-    }
+   
 
     const storeData = async (key, value) => {
       try {
@@ -55,20 +35,6 @@ const UserRegistration = ()=>{
       } catch (error) {
         console.log('Error storing data:', error);
       }
-    }
-
-    const handleSubmit = () => {
-      // submit the form data to your server or perform any other necessary action
-      console.log(name, email, password, confirmPassword);
-    
-      // store the form data in local storage
-      storeData('name', name);
-      storeData('email', email);
-      storeData('password', password);
-      storeData('confirmPassword', confirmPassword);
-
-      navigation.navigate('CompleteSetup')
-
     }
 
 
@@ -113,6 +79,23 @@ const UserRegistration = ()=>{
         }
 
     }
+
+
+
+    const handleSubmit = () => {
+      // submit the form data to your server or perform any other necessary action
+      console.log(name, email, password, confirmPassword);
+    
+      // store the form data in local storage
+      storeData('name', name);
+      storeData('email', email);
+      storeData('password', password);
+      storeData('confirmPassword', confirmPassword);
+
+      navigation.navigate('UserLogin')
+
+    }
+
     const navigation =useNavigation();
     const [fontsloaded]=useFonts({
         'Montaga': require('../assets/fonts/Montaga-Regular.ttf'),
@@ -251,7 +234,7 @@ const UserRegistration = ()=>{
             <SocialIcon
            
                   style = {styles.socialIcon}
-                  onPress={signInWithGoogleAsync}
+                  // onPress={signInWithGoogleAsync}
                   type="google"
                   iconColor="white"
                   backgroundColor ='red'
