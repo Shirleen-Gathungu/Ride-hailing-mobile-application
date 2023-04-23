@@ -9,7 +9,7 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-export default function MapScreen() {
+const Home = () => {
   const [region, setRegion] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -149,3 +149,6 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
 });
+
+
+export default Home;
