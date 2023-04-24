@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@expo/react-native-link": "^4.0.0",
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/geolocation": "^3.0.6",
     "@react-navigation/native": "^6.1.6",
